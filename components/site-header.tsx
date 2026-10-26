@@ -23,7 +23,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-cider/30 bg-cream/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-ink/15 bg-cream/95 backdrop-blur-md">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-paper focus:px-3 focus:py-2"
@@ -31,7 +31,7 @@ export function SiteHeader() {
         Skip to content
       </a>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
-        <a href="#top" className="group min-w-0">
+        <a href="#top" className="group min-w-0 shrink-0">
           <span className="block font-serif text-[1.7rem] leading-none tracking-tight text-ink">
             Iturrieta
           </span>
@@ -40,7 +40,7 @@ export function SiteHeader() {
           </span>
         </a>
 
-        <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
           {links.map((link) => (
             <a
               key={link.href}
@@ -52,16 +52,22 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
+          <a
+            href="tel:+34685721593"
+            className="hidden items-center justify-center rounded-full bg-[#A8A29A] px-4 py-2.5 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-[#7E7A72] lg:inline-flex"
+          >
+            685 72 15 93
+          </a>
           <a
             href="#visit"
-            className="inline-flex items-center justify-center bg-cider px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-cider-deep sm:px-5"
+            className="inline-flex items-center justify-center bg-cider px-3 py-2.5 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-cider-deep sm:px-5"
           >
             Reserve a Table
           </a>
           <button
             type="button"
-            className="inline-flex h-11 w-11 items-center justify-center border border-ink/20 text-ink md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center border border-ink/20 text-ink lg:hidden"
             aria-expanded={open}
             aria-controls="site-menu"
             onClick={() => setOpen((value) => !value)}
@@ -77,7 +83,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav id="site-menu" aria-label="Mobile" className="border-t border-cider/30 bg-paper md:hidden">
+        <nav id="site-menu" aria-label="Mobile" className="border-t border-ink/15 bg-paper lg:hidden">
           <ul className="mx-auto flex max-w-6xl flex-col px-5 py-2 sm:px-8">
             {links.map((link) => (
               <li key={link.href}>
@@ -90,6 +96,15 @@ export function SiteHeader() {
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href="tel:+34685721593"
+                className="block py-3 text-base text-ink"
+                onClick={() => setOpen(false)}
+              >
+                685 72 15 93
+              </a>
+            </li>
           </ul>
         </nav>
       ) : null}

@@ -20,21 +20,27 @@ export function OurStory() {
             <p>
               About 1,400 apple trees surround the farmhouse. In txotx season, January to May, the cider is poured from the kupela. The rest of the year it is served from the bottle.
             </p>
-            <p className="font-serif text-2xl leading-snug text-ink italic">
-              From the orchard, to the press, to the table.
-            </p>
           </div>
+          <p className="mt-8 flex items-start gap-4 font-serif text-2xl leading-snug text-ink italic sm:text-3xl">
+            <span aria-hidden="true" className="mt-[0.7em] h-px w-10 shrink-0 bg-cider" />
+            <span>From the orchard, to the press, to the table.</span>
+          </p>
         </div>
 
-        <div className="relative aspect-[4/5] overflow-hidden bg-cream-deep lg:col-span-7">
-          <Image
-            src="/images/prensa.jpg"
-            alt="A traditional wooden apple press on the lawn of the Iturrieta farmhouse, with the mountains of Álava behind it"
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover object-[center_40%]"
-          />
-        </div>
+        <figure className="lg:col-span-7">
+          <div className="relative aspect-[4/5] overflow-hidden bg-cream-deep">
+            <Image
+              src="/images/prensa.jpg"
+              alt="A traditional wooden apple press on the lawn of the Iturrieta farmhouse, with the mountains of Álava behind it"
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover object-[center_40%]"
+            />
+          </div>
+          <figcaption className="mt-3 text-sm leading-6 text-muted">
+            The wooden apple press on the lawn of the caserío.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

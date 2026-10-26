@@ -64,12 +64,12 @@ export function VisitUs() {
             Ask the cider house for a table. A reservation is real only after they confirm it.
           </p>
 
-          <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+          <ul className="mt-6 divide-y divide-ink/10 border border-ink/15 bg-paper">
             {contacts.map((contact) => (
               <li key={contact.label}>
                 <a
                   href={contact.href}
-                  className="flex h-full flex-col justify-center border border-ink/15 bg-paper px-4 py-3 transition-colors hover:border-cider-deep"
+                  className="flex items-baseline justify-between gap-4 px-4 py-4 transition-colors hover:bg-cream-deep sm:px-5"
                   {...(contact.href.startsWith("http")
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
@@ -77,7 +77,7 @@ export function VisitUs() {
                   <span className="text-xs font-medium uppercase tracking-[0.16em] text-cider-deep">
                     {contact.label}
                   </span>
-                  <span className="mt-1 text-sm text-ink">{contact.value}</span>
+                  <span className="text-right text-sm text-ink">{contact.value}</span>
                 </a>
               </li>
             ))}

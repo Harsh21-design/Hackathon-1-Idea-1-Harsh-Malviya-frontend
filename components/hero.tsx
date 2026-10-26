@@ -25,7 +25,7 @@ export function Hero() {
         <p className="mt-6 max-w-xl text-base leading-7 text-cream/90 sm:text-lg sm:leading-8">
           A family cider house in the mountains of Aramaio. Natural cider from their own apples, the charcoal grill, and a long table in the Basque tradition.
         </p>
-        <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="mt-9 flex flex-col items-start gap-4">
           <a
             href="#visit"
             className="inline-flex items-center justify-center bg-cider px-6 py-3.5 text-sm font-medium tracking-wide text-white transition-colors hover:bg-cider-deep"
@@ -34,11 +34,14 @@ export function Hero() {
           </a>
           <a
             href="#story"
-            className="inline-flex items-center justify-center border border-cream/50 px-6 py-3.5 text-sm font-medium text-cream transition-colors hover:border-cream hover:bg-cream/10"
+            className="text-sm font-medium text-cream underline decoration-cream/40 underline-offset-4 transition-colors hover:decoration-cream"
           >
             Our Story
           </a>
         </div>
+        <p className="mt-8 text-sm text-cream/80">
+          Aramaio · Txotx, January to May · 1,400 apple trees
+        </p>
       </div>
     </section>
   );

@@ -2,7 +2,6 @@ import Image from "next/image";
 
 const experiences = [
   {
-    index: "01",
     title: "Traditional dining",
     image: "/images/comedor.jpg",
     alt: "The Iturrieta dining room, with long wooden tables, benches, and a stone fireplace",
@@ -10,7 +9,6 @@ const experiences = [
     text: "Lunch at the sagardotegia is the classic cider-house table: the grill, cod, Idiazabal cheese, and cider from the house, served in the stone dining room.",
   },
   {
-    index: "02",
     title: "Cider tasting",
     image: "/images/kupelas.jpg",
     alt: "A long wooden table set with glasses beneath two large cider barrels at Iturrieta",
@@ -18,7 +16,6 @@ const experiences = [
     text: "Txotx is the tasting poured straight from the kupela. From January to May that is how the new cider is served. Afterwards, the same house cider comes to the table in the bottle.",
   },
   {
-    index: "03",
     title: "Groups and visits",
     image: "/images/manzano-nieve.jpg",
     alt: "A snow-covered apple tree in the orchard at Iturrieta",
@@ -26,6 +23,36 @@ const experiences = [
     text: "Families, cuadrillas, and groups come for the table, a look at the orchard and the press, or a gathering in the valley. The house arranges the details of each visit.",
   },
 ] as const;
+
+function ExperienceCard({
+  item,
+  featured = false,
+}: {
+  item: (typeof experiences)[number];
+  featured?: boolean;
+}) {
+  return (
+    <article className={featured ? "flex h-full flex-col lg:col-span-2 lg:row-span-2" : undefined}>
+      <div
+        className={`relative overflow-hidden bg-cream-deep ${featured ? "aspect-[4/5] flex-1 sm:aspect-[4/3] lg:aspect-auto lg:min-h-[28rem]" : "aspect-[4/3]"}`}
+      >
+        <Image
+          src={item.image}
+          alt={item.alt}
+          fill
+          sizes={featured ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 30vw, 100vw"}
+          className={item.imageClass}
+        />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-overlay/90 via-overlay/45 to-transparent px-5 pt-16 pb-5">
+          <h3 className={`font-serif font-medium text-cream ${featured ? "text-4xl" : "text-3xl"}`}>
+            {item.title}
+          </h3>
+        </div>
+      </div>
+      <p className="mt-4 text-base leading-7 text-muted">{item.text}</p>
+    </article>
+  );
+}
 
 export function Experience() {
   return (
@@ -44,24 +71,11 @@ export function Experience() {
           </p>
         </div>
 
-        <ul className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-          {experiences.map((item) => (
-            <li key={item.index} className="flex flex-col">
-              <div className="relative aspect-[4/3] overflow-hidden bg-cream-deep">
-                <Image
-                  src={item.image}
-                  alt={item.alt}
-                  fill
-                  sizes="(min-width: 768px) 30vw, 100vw"
-                  className={item.imageClass}
-                />
-              </div>
-              <p className="mt-5 text-xs font-medium tracking-[0.2em] text-cider-deep">{item.index}</p>
-              <h3 className="mt-2 font-serif text-3xl font-medium text-ink">{item.title}</h3>
-              <p className="mt-3 text-base leading-7 text-muted">{item.text}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-14 grid gap-12 lg:grid-cols-3 lg:grid-rows-2 lg:gap-8">
+          <ExperienceCard item={experiences[0]} featured />
+          <ExperienceCard item={experiences[1]} />
+          <ExperienceCard item={experiences[2]} />
+        </div>
       </div>
     </section>
   );
