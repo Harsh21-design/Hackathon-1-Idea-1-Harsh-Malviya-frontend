@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 
 const links = [
-  { href: "#story", label: "Our Story" },
-  { href: "#experience", label: "The Experience" },
-  { href: "#visit", label: "Visit Us" },
+  { href: "#house", label: "The House" },
+  { href: "#request", label: "Request a Table" },
 ];
 
 export function SiteHeader() {
@@ -60,7 +59,7 @@ export function SiteHeader() {
             685 72 15 93
           </a>
           <a
-            href="#visit"
+            href="#request"
             className="inline-flex items-center justify-center bg-cider px-3 py-2.5 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-cider-deep sm:px-5"
           >
             Reserve a Table

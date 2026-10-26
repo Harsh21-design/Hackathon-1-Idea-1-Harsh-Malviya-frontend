@@ -1,7 +1,8 @@
+import Link from "next/link";
+
 const links = [
-  { href: "#story", label: "Our Story" },
-  { href: "#experience", label: "The Experience" },
-  { href: "#visit", label: "Visit Us" },
+  { href: "#house", label: "The House" },
+  { href: "#request", label: "Request a Table" },
 ];
 
 export function SiteFooter() {
@@ -24,6 +25,17 @@ export function SiteFooter() {
           <a href="tel:+34685721593" className="mt-3 inline-block text-sm text-cream/85 hover:text-cream">
             685 72 15 93
           </a>
+          <a
+            href="https://wa.me/34685721593"
+            className="mt-2 block text-sm text-cream/85 hover:text-cream"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp
+          </a>
+          <a href="mailto:info@iturrieta.eus" className="mt-2 block text-sm text-cream/85 hover:text-cream">
+            info@iturrieta.eus
+          </a>
         </address>
         <nav aria-label="Footer">
           <ul className="flex flex-col gap-2 md:items-end">
@@ -34,6 +46,11 @@ export function SiteFooter() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link href="/admin" className="text-sm text-cream/85 hover:text-cream">
+                Staff
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
