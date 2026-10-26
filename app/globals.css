@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f1e7;
+  --foreground: #1c2416;
+  --cream: #f6f1e7;
+  --cream-deep: #ebe2d1;
+  --paper: #fbf7f0;
+  --forest: #1b3a2b;
+  --forest-mid: #2c5340;
+  --moss: #3d6a52;
+  --copper: #a56b3c;
+  --copper-soft: #c4895a;
+  --ink: #1c2416;
+  --muted: #4e493f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
+  --color-paper: var(--paper);
+  --color-forest: var(--forest);
+  --color-forest-mid: var(--forest-mid);
+  --color-moss: var(--moss);
+  --color-copper: var(--copper);
+  --color-copper-soft: var(--copper-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+}
+
+::selection {
+  background: #c4895a;
+  color: #1c2416;
+}
+
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+}
