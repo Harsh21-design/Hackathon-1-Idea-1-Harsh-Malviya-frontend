@@ -1,27 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f5f1;
-  --foreground: #16181c;
-  --cream: #f7f5f1;
-  --cream-deep: #eeeae3;
+  /* Warm, welcoming luxury stone & cider palette (No dull grey, no pitch black) */
+  --background: #fbf9f5;
+  --foreground: #1c1917;
+  --forest-dark: #222922;
+  --forest-card: #ffffff;
+  --forest-surface: #f4ede4;
+  --forest-border: rgba(169, 102, 60, 0.18);
   --paper: #ffffff;
-  --cider: #a9663c;
-  --cider-deep: #8a4f2c;
-  --overlay: #142112;
-  --ink: #16181c;
-  --muted: #6a6c70;
+  --gold: #b25e2e;
+  --gold-bright: #94481d;
+  --terracotta: #8a3f16;
+  --emerald-accent: #2c5138;
+  --ink: #1c1917;
+  --muted: #6b635b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-cream: var(--cream);
-  --color-cream-deep: var(--cream-deep);
-  --color-paper: var(--paper);
-  --color-cider: var(--cider);
-  --color-cider-deep: var(--cider-deep);
-  --color-overlay: var(--overlay);
+  --color-forest-dark: var(--forest-dark);
+  --color-forest-card: var(--forest-card);
+  --color-forest-surface: var(--forest-surface);
+  --color-forest-border: var(--forest-border);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-terracotta: var(--terracotta);
+  --color-emerald-accent: var(--emerald-accent);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --font-sans: var(--font-sans);
@@ -30,6 +36,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -41,12 +48,13 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), "Segoe UI", sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 ::selection {
-  background: #f7e7d6;
-  color: #8a4f2c;
+  background: #f3dfcb;
+  color: #7c3a13;
 }
 
 section[id] {
@@ -54,6 +62,6 @@ section[id] {
 }
 
 :focus-visible {
-  outline: 2px solid var(--cider-deep);
+  outline: 2px solid var(--gold);
   outline-offset: 3px;
 }

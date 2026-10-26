@@ -1,58 +1,87 @@
-import Link from "next/link";
+"use client";
 
-const links = [
-  { href: "#house", label: "The House" },
-  { href: "#request", label: "Request a Table" },
-];
+import Link from "next/link";
+import { useLang } from "@/lib/lang-context";
 
 export function SiteFooter() {
+  const { t } = useLang();
+
+  const links = [
+    { href: "#house", label: t.nav.story },
+    { href: "#experience", label: t.nav.experience },
+    { href: "#request", label: t.nav.bookTable },
+    { href: "#visit", label: t.nav.location },
+  ];
+
   return (
-    <footer className="mt-auto border-t border-cider bg-ink text-cream">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] md:items-start md:gap-12">
+    <footer className="mt-auto border-t border-stone-200 bg-[#f7f4ed] py-14 text-stone-600">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 sm:px-8 md:grid-cols-3">
+        {/* Brand */}
         <div>
-          <p className="font-serif text-3xl leading-none">Iturrieta</p>
-          <p className="mt-3 text-sm tracking-[0.16em] text-cream uppercase">Sagardotegia</p>
-          <p className="mt-4 max-w-sm text-sm leading-6 text-cream/80">
-            A family cider house in Aramaio, Álava. Photographs on this page are published by Iturrieta.
+          <span className="font-serif text-2xl font-bold tracking-tight text-stone-900">
+            Iturrieta
+          </span>
+          <p className="mt-1 text-xs font-bold uppercase tracking-[0.25em] text-gold">
+            Sagardotegia · Aramaio
+          </p>
+          <p className="mt-3 text-xs leading-relaxed text-stone-600 max-w-sm">
+            {t.footer.description}
           </p>
         </div>
-        <address className="not-italic">
-          <p className="text-sm leading-6 text-cream/85">
-            Arraga auzoa, 2
-            <br />
-            01169 Aramaio, Álava
+
+        {/* Channels */}
+        <div className="text-xs space-y-2">
+          <p className="font-bold uppercase tracking-wider text-stone-900 mb-3">
+            {t.visit.channelsLabel}
           </p>
-          <a href="tel:+34685721593" className="mt-3 inline-block text-sm text-cream/85 hover:text-cream">
-            685 72 15 93
-          </a>
-          <a
-            href="https://wa.me/34685721593"
-            className="mt-2 block text-sm text-cream/85 hover:text-cream"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            WhatsApp
-          </a>
-          <a href="mailto:info@iturrieta.eus" className="mt-2 block text-sm text-cream/85 hover:text-cream">
-            info@iturrieta.eus
-          </a>
-        </address>
-        <nav aria-label="Footer">
-          <ul className="flex flex-col gap-2 md:items-end">
+          <p className="text-stone-600">Arraga auzoa, 2 · 01169 Aramaio, Álava</p>
+          <p>
+            <a href="tel:+34685721593" className="hover:text-gold font-medium transition-colors">
+              +34 685 721 593
+            </a>
+          </p>
+          <p>
+            <a href="mailto:info@iturrieta.eus" className="hover:text-gold font-medium transition-colors">
+              info@iturrieta.eus
+            </a>
+          </p>
+          <p>
+            <a
+              href="https://t.me/IturrietaBookingBot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold font-bold hover:underline"
+            >
+              Telegram: @IturrietaBookingBot
+            </a>
+          </p>
+        </div>
+
+        {/* Links */}
+        <div className="text-xs md:text-right">
+          <p className="font-bold uppercase tracking-wider text-stone-900 mb-3">
+            {t.footer.navTitle}
+          </p>
+          <ul className="space-y-2">
             {links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="text-sm text-cream/85 hover:text-cream">
+                <a href={link.href} className="hover:text-gold transition-colors font-medium">
                   {link.label}
                 </a>
               </li>
             ))}
-            <li>
-              <Link href="/admin" className="text-sm text-cream/85 hover:text-cream">
-                Staff
+            <li className="pt-2">
+              <Link href="/admin" className="text-gold font-bold hover:underline">
+                {t.nav.staff} Portal →
               </Link>
             </li>
           </ul>
-        </nav>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-6 sm:px-8 mt-10 pt-6 border-t border-stone-200/80 text-[11px] flex flex-col sm:flex-row items-center justify-between text-stone-500">
+        <p>© 2026 {t.footer.rights}</p>
+        <p>Reservas Iturrieta · Autonomous Table Management System</p>
       </div>
     </footer>
   );

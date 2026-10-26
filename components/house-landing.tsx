@@ -1,100 +1,123 @@
+"use client";
+
 import Image from "next/image";
 import { OpenHours } from "@/components/open-hours";
-
-const facts = [
-  { label: "Since", value: "1998" },
-  { label: "Txotx season", value: "January to May" },
-] as const;
-
-const more = [
-  { label: "Menu", value: "€45, children €16" },
-  { label: "Also", value: "Concerts, visits, shop" },
-  { label: "Website", value: "5 languages" },
-] as const;
+import { useLang } from "@/lib/lang-context";
 
 export function HouseLanding() {
+  const { t } = useLang();
+
   return (
-    <section id="top" className="bg-cream pt-12 pb-8 sm:pt-16 sm:pb-12">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <p className="text-xs font-medium uppercase tracking-[0.22em] text-cider">
-          Hackathon 1 · Project A · Reservas Iturrieta
-        </p>
-        <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[1.05] font-medium tracking-tight text-ink sm:text-6xl">
-          About Sidrería Iturrieta
-        </h1>
+    <section id="house" className="relative bg-[#fbf9f5] py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6 sm:px-8">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          
+          {/* Left Column: Caserío Narrative */}
+          <div className="lg:col-span-7">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold">
+              {t.house.badge}
+            </span>
+            
+            <h2 className="mt-3 font-serif text-4xl leading-tight font-semibold text-stone-900 sm:text-5xl">
+              {t.house.title}
+            </h2>
 
-        <div className="mt-10 grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
-          <div id="house" className="lg:col-span-7">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="font-serif text-4xl leading-none text-ink">Iturrieta</p>
-                <p className="mt-2 text-xs font-medium uppercase tracking-[0.18em] text-cider">
-                  Sagardotegia · Aramaio
-                </p>
-              </div>
-              <a
-                href="https://www.iturrieta.eus/"
-                className="shrink-0 text-sm text-cider underline decoration-cider/40 underline-offset-4"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                iturrieta.eus
-              </a>
-            </div>
-
-            <p className="mt-6 max-w-xl text-base leading-7 text-ink sm:text-lg sm:leading-8">
-              A family farm and cider house in the Aramaio valley, 30 minutes from Vitoria. They grow their own organic apples and make their own natural cider.
+            <p className="mt-6 text-base leading-relaxed text-stone-600 sm:text-lg sm:leading-8">
+              {t.house.description}
             </p>
 
-            <figure className="mt-8">
-              <div className="relative aspect-[16/9] overflow-hidden bg-cream-deep">
+            <div className="mt-8 overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-md">
+              <div className="relative aspect-[16/9]">
                 <Image
-                  src="/images/caserio-verano.jpg"
-                  alt="The Iturrieta stone farmhouse in summer, set against forested mountains in Aramaio"
+                  src="/images/prensa.jpg"
+                  alt="Traditional cider press at Iturrieta farmhouse"
                   fill
-                  priority
                   sizes="(min-width: 1024px) 55vw, 100vw"
-                  className="object-cover object-[72%_58%]"
+                  className="object-cover object-[center_40%] transition-transform duration-700 hover:scale-105"
                 />
               </div>
-            </figure>
-
-            <dl className="mt-8 grid gap-6 border-t border-ink/15 py-5 sm:grid-cols-3">
-              {facts.map((fact) => (
-                <div key={fact.label}>
-                  <dt className="text-xs font-medium uppercase tracking-[0.16em] text-cider">{fact.label}</dt>
-                  <dd className="mt-2 text-lg text-ink">{fact.value}</dd>
-                </div>
-              ))}
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-[0.16em] text-cider">Open</dt>
-                <dd className="mt-2 text-lg text-ink">
-                  <OpenHours />
-                </dd>
+              <div className="p-4 border-t border-stone-100 text-xs text-stone-500 flex items-center justify-between bg-stone-50/50">
+                <span>{t.house.caption}</span>
+                <span className="text-gold font-medium">Aramaio · Álava</span>
               </div>
-            </dl>
-            <dl className="grid gap-6 border-t border-ink/15 py-5 sm:grid-cols-3">
-              {more.map((fact) => (
-                <div key={fact.label}>
-                  <dt className="text-xs font-medium uppercase tracking-[0.16em] text-cider">{fact.label}</dt>
-                  <dd className="mt-2 text-lg text-ink">{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-4 lg:col-span-5">
-            <div className="bg-[#e4d3c0] px-6 py-10 sm:px-8">
-              <p className="font-serif text-7xl leading-none font-medium text-cider sm:text-8xl">1,400</p>
-              <p className="mt-4 max-w-xs text-base leading-7 text-ink">Organic apple trees in the Aramaio valley</p>
+          {/* Right Column: Key Visitor Card */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="rounded-3xl border border-stone-200/90 bg-white p-8 sm:p-10 shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 right-0 h-40 w-40 bg-amber-50 rounded-full blur-2xl pointer-events-none" />
+
+              <h3 className="font-serif text-2xl font-semibold text-stone-900">
+                {t.house.infoTitle}
+              </h3>
+              <p className="mt-1 text-sm text-stone-500">
+                {t.house.infoSubtitle}
+              </p>
+
+              <div className="mt-8 space-y-6 divide-y divide-stone-100">
+                {/* Schedule */}
+                <div className="pt-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                    {t.house.scheduleLabel}
+                  </span>
+                  <div className="mt-1.5 text-base font-semibold text-stone-800">
+                    <OpenHours />
+                  </div>
+                  <p className="mt-1 text-xs text-stone-500">{t.house.scheduleSub}</p>
+                </div>
+
+                {/* Season */}
+                <div className="pt-5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                    {t.house.seasonLabel}
+                  </span>
+                  <p className="mt-1.5 text-base font-semibold text-stone-800">{t.house.seasonVal}</p>
+                  <p className="mt-1 text-xs text-stone-500">{t.house.seasonSub}</p>
+                </div>
+
+                {/* Pricing & Menu */}
+                <div className="pt-5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                    {t.house.menuLabel}
+                  </span>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-stone-800">{t.house.menuTraditional}</span>
+                    <span className="font-serif text-xl font-bold text-gold">€45</span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between text-xs text-stone-500">
+                    <span>{t.house.menuKids}</span>
+                    <span className="font-semibold text-stone-700">€16</span>
+                  </div>
+                  <p className="mt-2 text-xs text-stone-500">
+                    {t.house.menuSub}
+                  </p>
+                </div>
+
+                {/* Policy */}
+                <div className="pt-5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                    {t.house.policyLabel}
+                  </span>
+                  <p className="mt-1.5 text-xs leading-relaxed text-stone-600">
+                    {t.house.policyText}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="bg-ink px-6 py-8 text-cream sm:px-8">
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#e4d3c0]">Bookings today</p>
-              <p className="mt-3 text-base leading-7">By phone and WhatsApp, confirmed by the house.</p>
-              <p className="mt-8 text-xs font-medium uppercase tracking-[0.18em] text-[#e4d3c0]">What we will build</p>
-              <p className="mt-3 text-base leading-7">One booking flow for web, WhatsApp, and phone.</p>
+
+            {/* Terroir callout */}
+            <div className="rounded-2xl border border-amber-200/60 bg-[#faefe4] p-5 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gold">{t.house.terroirLabel}</p>
+                <p className="text-sm font-semibold text-stone-900">{t.house.terroirTitle}</p>
+              </div>
+              <span className="text-xs rounded-full bg-white px-3 py-1 font-semibold text-gold shadow-xs">
+                {t.house.terroirBadge}
+              </span>
             </div>
           </div>
+
         </div>
       </div>
     </section>
