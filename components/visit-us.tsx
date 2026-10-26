@@ -33,18 +33,18 @@ export function VisitUs() {
         </div>
 
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-forest-mid">Visit Us</p>
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-cider-deep">Visit Us</p>
           <h2
             id="visit-heading"
-            className="mt-4 font-serif text-4xl leading-tight font-medium text-forest sm:text-5xl"
+            className="mt-4 font-serif text-4xl leading-tight font-medium text-ink sm:text-5xl"
           >
             In the valley of Aramaio
           </h2>
-          <div className="mt-6 h-px w-16 bg-copper" />
+          <div className="mt-6 h-px w-16 bg-cider" />
 
           <dl className="mt-8 space-y-6">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-[0.18em] text-copper">Place</dt>
+              <dt className="text-xs font-medium uppercase tracking-[0.18em] text-cider-deep">Place</dt>
               <dd className="mt-2 text-lg leading-7 text-ink">
                 Arraga auzoa, 2
                 <br />
@@ -53,7 +53,7 @@ export function VisitUs() {
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-[0.18em] text-copper">Opening</dt>
+              <dt className="text-xs font-medium uppercase tracking-[0.18em] text-cider-deep">Opening</dt>
               <dd className="mt-2 text-base leading-7 text-muted">
                 The house follows a seasonal calendar. Txotx, cider from the kupela, runs from January to May. Lunch, dinners, and group days are confirmed by Iturrieta. This page does not list clock times or remaining seats.
               </dd>
@@ -69,12 +69,12 @@ export function VisitUs() {
               <li key={contact.label}>
                 <a
                   href={contact.href}
-                  className="flex h-full flex-col justify-center border border-forest/15 bg-paper px-4 py-3 transition-colors hover:border-copper"
+                  className="flex h-full flex-col justify-center border border-ink/15 bg-paper px-4 py-3 transition-colors hover:border-cider-deep"
                   {...(contact.href.startsWith("http")
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
                 >
-                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-forest-mid">
+                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-cider-deep">
                     {contact.label}
                   </span>
                   <span className="mt-1 text-sm text-ink">{contact.value}</span>

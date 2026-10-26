@@ -34,9 +34,3 @@ npm run build
 - Photographs from [iturrieta.eus](https://iturrieta.eus/)
 
 Opening hours, prices, and remaining seats are not listed, because those details still conflict on the official site.
-
-## Not in this commit
-
-- Booking flow
-- Staff or owner tools
-- Supabase

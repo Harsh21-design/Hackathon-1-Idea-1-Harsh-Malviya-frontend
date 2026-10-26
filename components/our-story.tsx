@@ -5,14 +5,14 @@ export function OurStory() {
     <section id="story" aria-labelledby="story-heading" className="bg-cream py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-forest-mid">Our Story</p>
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-cider-deep">Our Story</p>
           <h2
             id="story-heading"
-            className="mt-4 font-serif text-4xl leading-tight font-medium text-forest sm:text-5xl"
+            className="mt-4 font-serif text-4xl leading-tight font-medium text-ink sm:text-5xl"
           >
             A farmhouse that still presses its own apples
           </h2>
-          <div className="mt-6 h-px w-16 bg-copper" />
+          <div className="mt-6 h-px w-16 bg-cider" />
           <div className="mt-6 space-y-5 text-base leading-7 text-muted sm:text-lg sm:leading-8">
             <p>
               Iturrieta is a family farm in Aramaio. In 1998 the stables of the caserío opened as a sagardotegia, and the house still makes natural organic cider from apples grown on the land.
@@ -20,7 +20,7 @@ export function OurStory() {
             <p>
               About 1,400 apple trees surround the farmhouse. In txotx season, January to May, the cider is poured from the kupela. The rest of the year it is served from the bottle.
             </p>
-            <p className="font-serif text-2xl leading-snug text-forest italic">
+            <p className="font-serif text-2xl leading-snug text-ink italic">
               From the orchard, to the press, to the table.
             </p>
           </div>

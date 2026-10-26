@@ -1,18 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f1e7;
-  --foreground: #1c2416;
-  --cream: #f6f1e7;
-  --cream-deep: #ebe2d1;
-  --paper: #fbf7f0;
-  --forest: #1b3a2b;
-  --forest-mid: #2c5340;
-  --moss: #3d6a52;
-  --copper: #a56b3c;
-  --copper-soft: #c4895a;
-  --ink: #1c2416;
-  --muted: #4e493f;
+  --background: #f7f5f1;
+  --foreground: #16181c;
+  --cream: #f7f5f1;
+  --cream-deep: #eeeae3;
+  --paper: #ffffff;
+  --cider: #a9663c;
+  --cider-deep: #8a4f2c;
+  --overlay: #142112;
+  --ink: #16181c;
+  --muted: #6a6c70;
 }
 
 @theme inline {
@@ -21,11 +19,9 @@
   --color-cream: var(--cream);
   --color-cream-deep: var(--cream-deep);
   --color-paper: var(--paper);
-  --color-forest: var(--forest);
-  --color-forest-mid: var(--forest-mid);
-  --color-moss: var(--moss);
-  --color-copper: var(--copper);
-  --color-copper-soft: var(--copper-soft);
+  --color-cider: var(--cider);
+  --color-cider-deep: var(--cider-deep);
+  --color-overlay: var(--overlay);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --font-sans: var(--font-sans);
@@ -49,8 +45,8 @@ body {
 }
 
 ::selection {
-  background: #c4895a;
-  color: #1c2416;
+  background: #f7e7d6;
+  color: #8a4f2c;
 }
 
 section[id] {
@@ -58,6 +54,6 @@ section[id] {
 }
 
 :focus-visible {
-  outline: 2px solid var(--copper);
+  outline: 2px solid var(--cider-deep);
   outline-offset: 3px;
 }

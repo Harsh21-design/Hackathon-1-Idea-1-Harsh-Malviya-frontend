@@ -23,7 +23,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-copper/25 bg-cream/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-cider/30 bg-cream/95 backdrop-blur-md">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-paper focus:px-3 focus:py-2"
@@ -32,7 +32,7 @@ export function SiteHeader() {
       </a>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
         <a href="#top" className="group min-w-0">
-          <span className="block font-serif text-[1.7rem] leading-none tracking-tight text-forest">
+          <span className="block font-serif text-[1.7rem] leading-none tracking-tight text-ink">
             Iturrieta
           </span>
           <span className="mt-1 block text-[0.68rem] font-medium uppercase tracking-[0.22em] text-muted">
@@ -45,7 +45,7 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-ink/80 transition-colors hover:text-forest"
+              className="text-sm font-medium text-ink/80 transition-colors hover:text-cider-deep"
             >
               {link.label}
             </a>
@@ -55,29 +55,29 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <a
             href="#visit"
-            className="inline-flex items-center justify-center bg-forest px-3 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-forest-mid sm:px-5"
+            className="inline-flex items-center justify-center bg-cider px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-cider-deep sm:px-5"
           >
             Reserve a Table
           </a>
           <button
             type="button"
-            className="inline-flex h-11 w-11 items-center justify-center border border-forest/20 text-forest md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center border border-ink/20 text-ink md:hidden"
             aria-expanded={open}
             aria-controls="site-menu"
             onClick={() => setOpen((value) => !value)}
           >
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <span aria-hidden="true" className="flex flex-col gap-1.5">
-              <span className="block h-px w-5 bg-forest" />
-              <span className="block h-px w-5 bg-forest" />
-              <span className="block h-px w-5 bg-forest" />
+              <span className="block h-px w-5 bg-ink" />
+              <span className="block h-px w-5 bg-ink" />
+              <span className="block h-px w-5 bg-ink" />
             </span>
           </button>
         </div>
       </div>
 
       {open ? (
-        <nav id="site-menu" aria-label="Mobile" className="border-t border-copper/20 bg-paper md:hidden">
+        <nav id="site-menu" aria-label="Mobile" className="border-t border-cider/30 bg-paper md:hidden">
           <ul className="mx-auto flex max-w-6xl flex-col px-5 py-2 sm:px-8">
             {links.map((link) => (
               <li key={link.href}>

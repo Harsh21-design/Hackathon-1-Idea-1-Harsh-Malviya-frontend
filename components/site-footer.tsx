@@ -6,11 +6,11 @@ const links = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto bg-forest text-cream">
+    <footer className="mt-auto bg-ink text-cream">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-serif text-3xl leading-none">Iturrieta</p>
-          <p className="mt-3 text-sm tracking-[0.16em] uppercase text-copper-soft">Sagardotegia</p>
+          <p className="mt-3 text-sm tracking-[0.16em] text-cream uppercase">Sagardotegia</p>
           <p className="mt-4 max-w-sm text-sm leading-6 text-cream/80">
             A family cider house in Aramaio, Álava. Photographs on this page are published by Iturrieta.
           </p>

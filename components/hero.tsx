@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Hero() {
   return (
-    <section id="top" className="relative min-h-[88svh] overflow-hidden bg-forest text-cream">
+    <section id="top" className="relative min-h-[88svh] overflow-hidden bg-overlay text-cream">
       <Image
         src="/images/caserio-verano.jpg"
         alt="The Iturrieta stone farmhouse in summer, set against forested mountains in Aramaio, with wildflowers in the foreground"
@@ -11,9 +11,9 @@ export function Hero() {
         sizes="100vw"
         className="object-cover object-[72%_58%]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-forest/92 via-forest/55 to-forest/30 md:bg-gradient-to-r md:from-forest/90 md:via-forest/55 md:to-forest/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-overlay/92 via-overlay/55 to-overlay/30 md:bg-gradient-to-r md:from-overlay/90 md:via-overlay/55 md:to-overlay/15" />
       <div className="relative mx-auto flex min-h-[88svh] max-w-6xl flex-col justify-end px-5 py-16 sm:px-8 md:justify-center md:py-24">
-        <p className="text-xs font-medium uppercase tracking-[0.28em] text-copper-soft">
+        <p className="text-xs font-medium uppercase tracking-[0.28em] text-cream">
           Sagardotegia · Aramaio, Álava
         </p>
         <h1 className="mt-5 max-w-3xl font-serif text-5xl leading-[1.02] font-medium tracking-tight sm:text-6xl lg:text-7xl">
@@ -28,7 +28,7 @@ export function Hero() {
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href="#visit"
-            className="inline-flex items-center justify-center bg-copper px-6 py-3.5 text-sm font-medium tracking-wide text-cream transition-colors hover:bg-copper-soft hover:text-ink"
+            className="inline-flex items-center justify-center bg-cider px-6 py-3.5 text-sm font-medium tracking-wide text-white transition-colors hover:bg-cider-deep"
           >
             Reserve a Table
           </a>

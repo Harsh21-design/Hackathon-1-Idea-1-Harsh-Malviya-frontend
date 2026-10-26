@@ -32,10 +32,10 @@ export function Experience() {
     <section id="experience" aria-labelledby="experience-heading" className="bg-paper py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="max-w-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-forest-mid">The Experience</p>
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-cider-deep">The Experience</p>
           <h2
             id="experience-heading"
-            className="mt-4 font-serif text-4xl leading-tight font-medium text-forest sm:text-5xl"
+            className="mt-4 font-serif text-4xl leading-tight font-medium text-ink sm:text-5xl"
           >
             Cider, the grill, and the company of the table
           </h2>
@@ -56,8 +56,8 @@ export function Experience() {
                   className={item.imageClass}
                 />
               </div>
-              <p className="mt-5 text-xs font-medium tracking-[0.2em] text-copper">{item.index}</p>
-              <h3 className="mt-2 font-serif text-3xl font-medium text-forest">{item.title}</h3>
+              <p className="mt-5 text-xs font-medium tracking-[0.2em] text-cider-deep">{item.index}</p>
+              <h3 className="mt-2 font-serif text-3xl font-medium text-ink">{item.title}</h3>
               <p className="mt-3 text-base leading-7 text-muted">{item.text}</p>
             </li>
           ))}
