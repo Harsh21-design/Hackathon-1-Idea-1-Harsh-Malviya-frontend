@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { DICTIONARIES, type Dictionary, type Lang } from "./translations";
 
 type LangContextType = {
@@ -15,15 +15,14 @@ const LangContext = createContext<LangContextType>({
   t: DICTIONARIES.en,
 });
 
-export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+function readSavedLang(): Lang {
+  if (typeof window === "undefined") return "en";
+  const saved = localStorage.getItem("iturrieta-lang") as Lang | null;
+  return saved && DICTIONARIES[saved] ? saved : "en";
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem("iturrieta-lang") as Lang | null;
-    if (saved && DICTIONARIES[saved]) {
-      setLangState(saved);
-    }
-  }, []);
+export function LangProvider({ children }: { children: React.ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(readSavedLang);
 
   const setLang = (newLang: Lang) => {
     setLangState(newLang);

@@ -1,28 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { defaultStore, readStore, STORAGE_KEY, STORE_EVENT, type Store } from "@/lib/booking-store";
+import { useCallback, useEffect, useState } from "react";
+import {
+  BOOKING_REFRESH_EVENT,
+  fetchBookingStore,
+  subscribeBookingRealtime,
+} from "@/lib/booking-api";
+import { defaultStore, type Store } from "@/lib/booking-store";
 
-export function useBookingStore(): { store: Store; ready: boolean } {
+export function useBookingStore(): { store: Store; ready: boolean; error: string | null; refetch: () => void } {
   const [store, setStore] = useState<Store>(defaultStore);
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const read = () => setStore(readStore());
-    read();
-    setReady(true);
-
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY) read();
-    };
-
-    window.addEventListener(STORE_EVENT, read);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(STORE_EVENT, read);
-      window.removeEventListener("storage", onStorage);
-    };
+  const load = useCallback(async () => {
+    try {
+      const next = await fetchBookingStore();
+      setStore(next);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not load booking data.");
+    } finally {
+      setReady(true);
+    }
   }, []);
 
-  return { store, ready };
+  useEffect(() => {
+    queueMicrotask(() => {
+      void load();
+    });
+    const onRefresh = () => {
+      void load();
+    };
+    window.addEventListener(BOOKING_REFRESH_EVENT, onRefresh);
+    let unsubscribe: () => void = () => {};
+    subscribeBookingRealtime(onRefresh).then((off) => {
+      unsubscribe = off;
+    });
+    return () => {
+      window.removeEventListener(BOOKING_REFRESH_EVENT, onRefresh);
+      unsubscribe();
+    };
+  }, [load]);
+
+  return { store, ready, error, refetch: load };
 }

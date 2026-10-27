@@ -2,24 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  assignTableToBooking,
+  closeDay,
+  reopenDay,
+  setRequestStatus,
+  toggleGuestNoShow,
+  toggleGuestVip,
+} from "@/lib/booking-api";
 import {
   todayIso,
   displayDate,
-  setRequestStatus,
-  assignTableToBooking,
-  toggleGuestVip,
-  toggleGuestNoShow,
-  closeDay,
-  reopenDay,
-  setStaffRole,
   type BookingRequest,
   type BookingStatus,
-  type UserRole,
 } from "@/lib/booking-store";
 import { useBookingStore } from "@/components/use-booking-store";
+import { useStaffSession } from "@/components/use-staff-session";
 
 export function AdminDashboard() {
-  const { store, ready } = useBookingStore();
+  const router = useRouter();
+  const { store, ready, error: storeError } = useBookingStore();
+  const { profile, role, loading: sessionLoading, signOut } = useStaffSession();
   const [activeTab, setActiveTab] = useState<"floor" | "crm" | "guests" | "settings">("floor");
   
   // Search & Filters for Reservations CRM
@@ -34,7 +38,13 @@ export function AdminDashboard() {
   const [closeDate, setCloseDate] = useState("");
   const [closeReason, setCloseReason] = useState("");
 
-  if (!ready) {
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/admin/login");
+    router.refresh();
+  };
+
+  if (!ready || sessionLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#fbf9f5] text-stone-600">
         <p className="font-serif text-lg animate-pulse">Loading Iturrieta Hospitality OS...</p>
@@ -42,7 +52,28 @@ export function AdminDashboard() {
     );
   }
 
-  const role: UserRole = store.currentRole || "owner";
+  if (!profile || !role) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#fbf9f5] px-6 text-center text-stone-600">
+        <div className="max-w-md space-y-3">
+          <p className="font-serif text-xl font-bold text-stone-900">Staff profile not found</p>
+          <p className="text-sm">
+            Your account is signed in but has no role in Iturrieta OS. Ask the owner to add you in Supabase.
+          </p>
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-stone-800"
+            >
+              Sign Out & Go to Login
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const isOwner = role === "owner";
 
   const today = todayIso();
@@ -53,35 +84,60 @@ export function AdminDashboard() {
   const pendingRequests = store.requests.filter((r) => r.status === "requested");
   const seatedCount = todaysBookings.filter((b) => b.status === "seated").length;
 
-  // Handlers
-  const handleRoleToggle = (newRole: UserRole) => {
-    setStaffRole(newRole);
-    // If waiter switches and is on settings, redirect to floor
-    if (newRole === "waiter" && (activeTab === "settings" || activeTab === "guests")) {
-      setActiveTab("floor");
+  const handleStatusChange = async (id: string, status: BookingStatus) => {
+    try {
+      await setRequestStatus(id, status);
+      if (selectedBooking && selectedBooking.id === id) {
+        setSelectedBooking({ ...selectedBooking, status });
+      }
+    } catch {
+      // RLS or network errors surface on next refetch
     }
   };
 
-  const handleStatusChange = (id: string, status: BookingStatus) => {
-    setRequestStatus(id, status);
-    if (selectedBooking && selectedBooking.id === id) {
-      setSelectedBooking({ ...selectedBooking, status });
+  const handleTableAssign = async (bookingId: string, tableId: string) => {
+    try {
+      await assignTableToBooking(bookingId, tableId);
+      if (selectedBooking && selectedBooking.id === bookingId) {
+        setSelectedBooking({ ...selectedBooking, tableId: tableId || undefined });
+      }
+    } catch {
+      // ignored
     }
   };
 
-  const handleTableAssign = (bookingId: string, tableId: string) => {
-    assignTableToBooking(bookingId, tableId);
-    if (selectedBooking && selectedBooking.id === bookingId) {
-      setSelectedBooking({ ...selectedBooking, tableId });
+  const handleToggleVip = async (booking: BookingRequest) => {
+    if (!isOwner) return;
+    try {
+      await toggleGuestVip(booking.id, Boolean(booking.vipTag));
+      if (selectedBooking?.id === booking.id) {
+        setSelectedBooking({ ...selectedBooking, vipTag: !booking.vipTag });
+      }
+    } catch {
+      // ignored
     }
   };
 
-  const handleAddClosure = (e: React.FormEvent) => {
+  const handleToggleNoShow = async (booking: BookingRequest) => {
+    if (!isOwner) return;
+    try {
+      await toggleGuestNoShow(booking.id, Boolean(booking.isNoShow));
+      if (selectedBooking?.id === booking.id) {
+        setSelectedBooking({ ...selectedBooking, isNoShow: !booking.isNoShow });
+      }
+    } catch {
+      // ignored
+    }
+  };
+
+  const handleAddClosure = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!closeDate) return;
-    closeDay(closeDate, closeReason);
-    setCloseDate("");
-    setCloseReason("");
+    const result = await closeDay(closeDate, closeReason);
+    if (!result) {
+      setCloseDate("");
+      setCloseReason("");
+    }
   };
 
   // Filtered requests
@@ -130,41 +186,24 @@ export function AdminDashboard() {
 
           <div className="flex items-center gap-2 mt-1">
             <div className="h-8 w-8 rounded-full bg-stone-700 flex items-center justify-center text-sm shadow-xs">
-              {isOwner ? "👑" : "🧑‍🍳"}
+              {profile.avatar}
             </div>
             <div className="text-xs">
-              <p className="font-bold text-white leading-tight">
-                {isOwner ? "Jon Iturrieta" : "Amaia (Floor)"}
-              </p>
+              <p className="font-bold text-white leading-tight">{profile.name}</p>
               <p className="text-[11px] text-stone-400">
                 {isOwner ? "Owner & Director" : "Live Floor Host"}
               </p>
             </div>
           </div>
 
-          {/* Quick Role Toggle Button for Demo */}
-          <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between">
-            <span className="text-[10px] text-stone-400 font-medium">Switch Role:</span>
-            <div className="flex rounded-lg bg-black/40 p-0.5 text-[10px] font-bold">
-              <button
-                type="button"
-                onClick={() => handleRoleToggle("owner")}
-                className={`px-2 py-1 rounded-md transition-all ${
-                  isOwner ? "bg-amber-400 text-stone-950 shadow-xs" : "text-stone-300 hover:text-white"
-                }`}
-              >
-                Owner
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRoleToggle("waiter")}
-                className={`px-2 py-1 rounded-md transition-all ${
-                  !isOwner ? "bg-emerald-400 text-stone-950 shadow-xs" : "text-stone-300 hover:text-white"
-                }`}
-              >
-                Waiter
-              </button>
-            </div>
+          <div className="mt-3 pt-2.5 border-t border-white/10">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="w-full rounded-lg border border-white/15 py-2 text-[10px] font-bold text-stone-300 transition hover:bg-white/10 hover:text-white"
+            >
+              Sign out
+            </button>
           </div>
         </div>
 
@@ -303,7 +342,12 @@ export function AdminDashboard() {
 
         {/* TAB CONTENTS */}
         <main className="p-8 space-y-8 flex-1">
-          
+          {storeError && (
+            <p className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+              {storeError}
+            </p>
+          )}
+
           {/* ============================================================ */}
           {/* TAB 1: LIVE FLOOR OPS (Waiter & Staff View) */}
           {/* ============================================================ */}
@@ -317,7 +361,7 @@ export function AdminDashboard() {
                     Live Floor Operations ({displayDate(today)})
                   </h1>
                   <p className="mt-1 text-xs text-stone-500">
-                    "Staff run the floor in real time" · Quick seating, table status, and shift turnover.
+                    &ldquo;Staff run the floor in real time&rdquo; · Quick seating, table status, and shift turnover.
                   </p>
                 </div>
 
@@ -367,7 +411,7 @@ export function AdminDashboard() {
                   <p className="mt-3 font-serif text-3xl font-bold text-amber-600">
                     {todaysBookings.filter((b) => b.status === "confirmed").length} <span className="text-base text-stone-400 font-normal">Tables</span>
                   </p>
-                  <p className="mt-1 text-[11px] text-stone-500">Confirmed for today's lunch</p>
+                  <p className="mt-1 text-[11px] text-stone-500">Confirmed for today&apos;s lunch</p>
                 </div>
 
                 <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
@@ -621,7 +665,7 @@ export function AdminDashboard() {
                           <p className="text-xs text-stone-400">{b.phone}</p>
                           {b.note && (
                             <p className="mt-2 rounded-lg bg-stone-50 p-2 text-xs text-stone-600 italic">
-                              "{b.note}"
+                              &ldquo;{b.note}&rdquo;
                             </p>
                           )}
                         </div>
@@ -674,21 +718,26 @@ export function AdminDashboard() {
                           </div>
                         )}
 
-                        {b.status === "requested" && (
+                        {b.status === "requested" && isOwner && (
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleStatusChange(b.id, "confirmed")}
+                              onClick={() => void handleStatusChange(b.id, "confirmed")}
                               className="flex-1 rounded-xl bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-700"
                             >
                               Confirm
                             </button>
                             <button
-                              onClick={() => handleStatusChange(b.id, "declined")}
+                              onClick={() => void handleStatusChange(b.id, "declined")}
                               className="rounded-xl border border-stone-200 px-3 py-2 text-xs font-bold text-stone-600 hover:bg-stone-100"
                             >
                               Decline
                             </button>
                           </div>
+                        )}
+                        {b.status === "requested" && !isOwner && (
+                          <span className="text-xs text-amber-800 font-bold block text-center py-1">
+                            Pending owner confirmation
+                          </span>
                         )}
 
                         {b.status === "completed" && (
@@ -721,7 +770,7 @@ export function AdminDashboard() {
                     Reservations Master CRM
                   </h1>
                   <p className="mt-1 text-xs text-stone-500">
-                    Unified multi-channel booking inflow: Web, Telegram Bot & Phone requests.
+                    Unified multi-channel booking inflow: Web (Online Form) & Telegram AI Bot.
                   </p>
                 </div>
 
@@ -769,7 +818,6 @@ export function AdminDashboard() {
                     <option value="all">All Channels</option>
                     <option value="web">Web Form</option>
                     <option value="telegram">Telegram Bot</option>
-                    <option value="phone">Phone Call</option>
                   </select>
                 </div>
               </div>
@@ -817,21 +865,22 @@ export function AdminDashboard() {
                           </td>
                           <td className="py-3.5 px-5">
                             <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-                              {r.vipTag ? (
-                                <button
-                                  onClick={() => toggleGuestVip(r.id)}
-                                  className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900 hover:bg-amber-200"
-                                >
-                                  ★ VIP
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => toggleGuestVip(r.id)}
-                                  className="text-[10px] text-stone-400 hover:text-amber-500"
-                                >
-                                  + VIP
-                                </button>
-                              )}
+                              {isOwner &&
+                                (r.vipTag ? (
+                                  <button
+                                    onClick={() => handleToggleVip(r)}
+                                    className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900 hover:bg-amber-200"
+                                  >
+                                    ★ VIP
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleToggleVip(r)}
+                                    className="text-[10px] text-stone-400 hover:text-amber-500"
+                                  >
+                                    + VIP
+                                  </button>
+                                ))}
 
                               {r.isNoShow && (
                                 <span className="rounded-md bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-700">
@@ -866,16 +915,16 @@ export function AdminDashboard() {
                             </select>
                           </td>
                           <td className="py-3.5 px-5 text-right space-x-1 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                            {r.status === "requested" && (
+                            {r.status === "requested" && isOwner && (
                               <>
                                 <button
-                                  onClick={() => handleStatusChange(r.id, "confirmed")}
+                                  onClick={() => void handleStatusChange(r.id, "confirmed")}
                                   className="rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-emerald-700"
                                 >
                                   Confirm
                                 </button>
                                 <button
-                                  onClick={() => handleStatusChange(r.id, "declined")}
+                                  onClick={() => void handleStatusChange(r.id, "declined")}
                                   className="rounded-lg border border-stone-200 px-2.5 py-1.5 text-[11px] font-bold text-stone-600 hover:bg-stone-100"
                                 >
                                   Decline
@@ -941,13 +990,13 @@ export function AdminDashboard() {
 
                     <div className="flex items-center justify-between gap-2 pt-2">
                       <button
-                        onClick={() => toggleGuestVip(g.id)}
+                        onClick={() => handleToggleVip(g)}
                         className="flex-1 rounded-lg border border-amber-300 bg-[#faefe4] py-1 text-[11px] font-bold text-gold hover:bg-amber-100"
                       >
                         {g.vipTag ? "Remove VIP" : "Mark as VIP"}
                       </button>
                       <button
-                        onClick={() => toggleGuestNoShow(g.id)}
+                        onClick={() => handleToggleNoShow(g)}
                         className={`flex-1 rounded-lg py-1 text-[11px] font-bold border ${
                           g.isNoShow
                             ? "border-rose-300 bg-rose-50 text-rose-700"
@@ -973,7 +1022,7 @@ export function AdminDashboard() {
                   House Settings & Shift Controls
                 </h1>
                 <p className="mt-1 text-xs text-stone-500">
-                  "The owners control everything, from anywhere" · Capacity, blackout dates, and service shifts.
+                  &ldquo;The owners control everything, from anywhere&rdquo; · Capacity, blackout dates, and service shifts.
                 </p>
               </div>
 
@@ -1049,7 +1098,7 @@ export function AdminDashboard() {
                           <span className="ml-2 text-stone-500">({c.reason})</span>
                         </div>
                         <button
-                          onClick={() => reopenDay(c.serviceDate)}
+                          onClick={() => void reopenDay(c.serviceDate)}
                           className="text-xs font-bold text-emerald-600 hover:underline"
                         >
                           Reopen Date
@@ -1121,7 +1170,7 @@ export function AdminDashboard() {
                 {selectedBooking.note && (
                   <div className="rounded-xl border border-stone-100 bg-stone-50 p-3 text-xs">
                     <span className="text-[10px] text-stone-400 uppercase font-bold">Special Dietary / Notes</span>
-                    <p className="mt-1 text-stone-700 italic">"{selectedBooking.note}"</p>
+                    <p className="mt-1 text-stone-700 italic">&ldquo;{selectedBooking.note}&rdquo;</p>
                   </div>
                 )}
 
@@ -1145,10 +1194,7 @@ export function AdminDashboard() {
                 {/* CRM Flags */}
                 <div className="flex gap-2 pt-2">
                   <button
-                    onClick={() => {
-                      toggleGuestVip(selectedBooking.id);
-                      setSelectedBooking({ ...selectedBooking, vipTag: !selectedBooking.vipTag });
-                    }}
+                    onClick={() => handleToggleVip(selectedBooking)}
                     className={`flex-1 rounded-xl py-2 text-xs font-bold border transition-colors ${
                       selectedBooking.vipTag ? "border-amber-400 bg-amber-50 text-amber-900" : "border-stone-200 text-stone-600 hover:bg-stone-50"
                     }`}
@@ -1156,10 +1202,7 @@ export function AdminDashboard() {
                     ★ {selectedBooking.vipTag ? "VIP Regular" : "Set VIP"}
                   </button>
                   <button
-                    onClick={() => {
-                      toggleGuestNoShow(selectedBooking.id);
-                      setSelectedBooking({ ...selectedBooking, isNoShow: !selectedBooking.isNoShow });
-                    }}
+                    onClick={() => handleToggleNoShow(selectedBooking)}
                     className={`flex-1 rounded-xl py-2 text-xs font-bold border transition-colors ${
                       selectedBooking.isNoShow ? "border-rose-400 bg-rose-50 text-rose-700" : "border-stone-200 text-stone-600 hover:bg-stone-50"
                     }`}
@@ -1173,14 +1216,16 @@ export function AdminDashboard() {
             {/* Quick status actions at bottom */}
             <div className="border-t border-stone-100 pt-4 space-y-2">
               <div className="flex gap-2">
+                {isOwner && (
+                  <button
+                    onClick={() => void handleStatusChange(selectedBooking.id, "confirmed")}
+                    className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white hover:bg-emerald-700"
+                  >
+                    Confirm Table
+                  </button>
+                )}
                 <button
-                  onClick={() => handleStatusChange(selectedBooking.id, "confirmed")}
-                  className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white hover:bg-emerald-700"
-                >
-                  Confirm Table
-                </button>
-                <button
-                  onClick={() => handleStatusChange(selectedBooking.id, "seated")}
+                  onClick={() => void handleStatusChange(selectedBooking.id, "seated")}
                   className="flex-1 rounded-xl bg-gold py-2.5 text-xs font-bold text-white hover:bg-gold-bright"
                 >
                   Seat Guest

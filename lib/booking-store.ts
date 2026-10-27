@@ -6,7 +6,7 @@ export type BookingStatus =
   | "declined"
   | "cancelled";
 
-export type BookingChannel = "web" | "telegram" | "phone";
+export type BookingChannel = "web" | "telegram";
 
 export type UserRole = "owner" | "waiter";
 
@@ -62,7 +62,6 @@ export type Store = {
   closures: Closure[];
   tables: Table[];
   staff: StaffMember[];
-  currentRole: UserRole;
 };
 
 export type NewRequest = {
@@ -74,9 +73,6 @@ export type NewRequest = {
   note: string;
   channel?: BookingChannel;
 };
-
-export const STORAGE_KEY = "iturrieta-booking-store";
-export const STORE_EVENT = "iturrieta-store";
 
 export const FULL_DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 export const SHORT_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -164,7 +160,7 @@ export function weekdayOf(isoDate: string): number {
   return new Date(year, month - 1, day).getDay();
 }
 
-function sortWeek(days: number[]): number[] {
+export function sortWeek(days: number[]): number[] {
   return [...new Set(days)].sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7));
 }
 
@@ -198,7 +194,7 @@ export function openDaySentence(schedule: Schedule): string {
   return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
 }
 
-function toMinutes(value: string): number {
+export function toMinutes(value: string): number {
   const [hours, minutes] = value.split(":").map(Number);
   return hours * 60 + minutes;
 }
@@ -272,81 +268,22 @@ export function defaultSeedRequests(): BookingRequest[] {
       tableId: "T2",
       vipTag: true,
       totalVisits: 5,
-      note: "Family celebration · 2 kids",
+      note: "Family celebration",
       createdAt: new Date(Date.now() - 3600000).toISOString(),
     },
     {
       id: "seed-2",
       guestName: "Miren Zubizarreta",
       phone: "+34 689 443 211",
-      partySize: 12,
+      partySize: 4,
       serviceDate: today,
       serviceTime: "14:00",
       channel: "telegram",
-      status: "confirmed",
-      tableId: "T11",
-      vipTag: false,
-      totalVisits: 2,
-      note: "Cuadrilla visit · cider tasting directly from kupela",
-      createdAt: new Date(Date.now() - 7200000).toISOString(),
-    },
-    {
-      id: "seed-3",
-      guestName: "Carlos Fernandez",
-      phone: "+34 655 889 900",
-      partySize: 4,
-      serviceDate: today,
-      serviceTime: "13:00",
-      channel: "web",
-      status: "seated",
-      tableId: "T1",
+      status: "requested",
       vipTag: false,
       totalVisits: 1,
-      note: "High chair needed for toddler",
-      createdAt: new Date(Date.now() - 10800000).toISOString(),
-    },
-    {
-      id: "seed-4",
-      guestName: "Ainhoa Etxebarria",
-      phone: "+34 644 112 233",
-      partySize: 8,
-      serviceDate: today,
-      serviceTime: "14:30",
-      channel: "telegram",
-      status: "requested",
-      vipTag: true,
-      totalVisits: 4,
-      note: "Requested via Telegram bot · requires confirmation",
+      note: "Requested via Telegram AI Bot",
       createdAt: new Date(Date.now() - 1800000).toISOString(),
-    },
-    {
-      id: "seed-5",
-      guestName: "Jon Arriaga",
-      phone: "+34 677 334 455",
-      partySize: 4,
-      serviceDate: today,
-      serviceTime: "13:30",
-      channel: "phone",
-      status: "requested",
-      isNoShow: true, // Repeated no-show warning demonstration
-      totalVisits: 3,
-      note: "Previous no-show on 12/04 recorded in CRM",
-      createdAt: new Date(Date.now() - 900000).toISOString(),
-    },
-    {
-      id: "seed-6",
-      guestName: "Elena Barandiarán",
-      phone: "+34 620 998 877",
-      partySize: 10,
-      serviceDate: today,
-      serviceTime: "15:00",
-      channel: "web",
-      status: "confirmed",
-      tableId: "T12",
-      vipTag: false,
-      totalVisits: 1,
-      note: "Gluten free bread required for 1 guest",
-      createdAt: new Date(Date.now() - 400000).toISOString(),
     },
   ];
 }
@@ -358,164 +295,5 @@ export function defaultStore(): Store {
     closures: [],
     tables: defaultTables(),
     staff: defaultStaff(),
-    currentRole: "owner",
   };
-}
-
-export function readStore(): Store {
-  if (typeof window === "undefined") return defaultStore();
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      const initial = {
-        requests: defaultSeedRequests(),
-        schedule: defaultSchedule(),
-        closures: [],
-        tables: defaultTables(),
-        staff: defaultStaff(),
-        currentRole: "owner" as UserRole,
-      };
-      writeStore(initial);
-      return initial;
-    }
-    const parsed = JSON.parse(raw) as Partial<Store>;
-    return {
-      requests: parsed.requests && Array.isArray(parsed.requests) ? parsed.requests : defaultSeedRequests(),
-      schedule: parsed.schedule ? { ...defaultSchedule(), ...parsed.schedule } : defaultSchedule(),
-      closures: parsed.closures && Array.isArray(parsed.closures) ? parsed.closures : [],
-      tables: parsed.tables && Array.isArray(parsed.tables) ? parsed.tables : defaultTables(),
-      staff: parsed.staff && Array.isArray(parsed.staff) ? parsed.staff : defaultStaff(),
-      currentRole: parsed.currentRole || "owner",
-    };
-  } catch {
-    return defaultStore();
-  }
-}
-
-export function writeStore(store: Store) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-  window.dispatchEvent(new Event(STORE_EVENT));
-}
-
-export function setStaffRole(role: UserRole) {
-  const store = readStore();
-  writeStore({ ...store, currentRole: role });
-}
-
-export function createRequest(input: NewRequest): string | null {
-  const store = readStore();
-  const error = validateRequest(input, store.schedule, store.closures);
-  if (error) return error;
-  const request: BookingRequest = {
-    id: crypto.randomUUID(),
-    guestName: input.guestName.trim(),
-    phone: input.phone.trim(),
-    partySize: input.partySize,
-    serviceDate: input.serviceDate,
-    serviceTime: input.serviceTime,
-    channel: input.channel || "web",
-    status: "requested",
-    vipTag: false,
-    totalVisits: 1,
-    note: input.note.trim(),
-    createdAt: new Date().toISOString(),
-  };
-  writeStore({ ...store, requests: [request, ...store.requests] });
-  return null;
-}
-
-export function setRequestStatus(id: string, status: BookingStatus) {
-  const store = readStore();
-  writeStore({
-    ...store,
-    requests: store.requests.map((request) =>
-      request.id === id ? { ...request, status } : request
-    ),
-  });
-}
-
-export function assignTableToBooking(bookingId: string, tableId: string) {
-  const store = readStore();
-  writeStore({
-    ...store,
-    requests: store.requests.map((r) =>
-      r.id === bookingId ? { ...r, tableId } : r
-    ),
-  });
-}
-
-export function toggleGuestVip(bookingId: string) {
-  const store = readStore();
-  writeStore({
-    ...store,
-    requests: store.requests.map((r) =>
-      r.id === bookingId ? { ...r, vipTag: !r.vipTag } : r
-    ),
-  });
-}
-
-export function toggleGuestNoShow(bookingId: string) {
-  const store = readStore();
-  writeStore({
-    ...store,
-    requests: store.requests.map((r) =>
-      r.id === bookingId ? { ...r, isNoShow: !r.isNoShow } : r
-    ),
-  });
-}
-
-export function updateRequestSlot(
-  id: string,
-  serviceDate: string,
-  serviceTime: string
-): string | null {
-  const store = readStore();
-  const error = validateSlot(serviceDate, serviceTime, store.schedule, store.closures);
-  if (error) return error;
-  writeStore({
-    ...store,
-    requests: store.requests.map((request) =>
-      request.id === id ? { ...request, serviceDate, serviceTime } : request
-    ),
-  });
-  return null;
-}
-
-export function saveSchedule(next: Schedule): string | null {
-  if (next.openWeekdays.length === 0) return "Keep at least one open day.";
-  const opens = toMinutes(next.opensAt);
-  const closes = toMinutes(next.closesAt);
-  const last = toMinutes(next.lastBookingTime);
-  if (opens >= closes) return "The service has to open before it closes.";
-  if (last < opens || last > closes) return "The last booking time has to sit inside the service.";
-  const store = readStore();
-  writeStore({
-    ...store,
-    schedule: { ...next, openWeekdays: sortWeek(next.openWeekdays) },
-  });
-  return null;
-}
-
-export function closeDay(serviceDate: string, reason: string): string | null {
-  if (!serviceDate) return "Choose a date.";
-  const store = readStore();
-  const next: Closure = {
-    id: crypto.randomUUID(),
-    serviceDate,
-    reason: reason.trim() || "Closed",
-  };
-  writeStore({
-    ...store,
-    closures: [...store.closures.filter((c) => c.serviceDate !== serviceDate), next],
-  });
-  return null;
-}
-
-export function reopenDay(serviceDate: string) {
-  const store = readStore();
-  writeStore({
-    ...store,
-    closures: store.closures.filter((c) => c.serviceDate !== serviceDate),
-  });
 }

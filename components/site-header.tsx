@@ -98,6 +98,14 @@ export function SiteHeader() {
             <span>{t.nav.telegramBooking}</span>
           </a>
 
+          {/* Login button */}
+          <Link
+            href="/admin/login"
+            className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-stone-700 shadow-xs transition-all hover:border-gold hover:text-gold"
+          >
+            Login
+          </Link>
+
           {/* Main reservation button */}
           <a
             href="#request"
@@ -138,6 +146,13 @@ export function SiteHeader() {
                 {link.label}
               </a>
             ))}
+            <Link
+              href="/admin/login"
+              onClick={() => setOpen(false)}
+              className="text-stone-700 hover:text-gold"
+            >
+              Login
+            </Link>
             <a
               href="https://t.me/IturrietaBookingBot"
               target="_blank"

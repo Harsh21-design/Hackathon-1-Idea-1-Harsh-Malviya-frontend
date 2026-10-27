@@ -2,13 +2,14 @@
 
 Reservation site for **Iturrieta**, a family cider house (sagardotegia) in Aramaio, Álava, Basque Country.
 
-This repo currently has the public homepage only. There is no booking form, payment, or database yet. A table request is confirmed only by the cider house.
+Public homepage plus a staff portal at `/admin` (owner and waiter roles). Guest table requests are stored in **Supabase** when configured.
 
 ## Stack
 
 - Next.js (App Router)
 - TypeScript
 - Tailwind CSS
+- Supabase (Auth, PostgreSQL, Realtime)
 
 ## Run locally
 
@@ -20,6 +21,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+### Supabase (staff login + bookings)
+
+1. Copy `.env.example` to `.env.local` and add your project URL and anon key.
+2. Run the SQL migration and create staff users — see [supabase/SETUP.md](supabase/SETUP.md).
+3. Staff sign in at [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
 
 ```bash
 npm run lint

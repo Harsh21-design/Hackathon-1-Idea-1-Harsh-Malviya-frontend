@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { createRequest, openDaySentence, timeOptions } from "@/lib/booking-store";
+import { createBookingRequest } from "@/lib/booking-api";
+import { timeOptions } from "@/lib/booking-store";
 import { useBookingStore } from "@/components/use-booking-store";
 import { useLang } from "@/lib/lang-context";
 
@@ -20,10 +21,12 @@ export function TableRequestForm() {
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = createRequest({
+    setSubmitting(true);
+    const result = await createBookingRequest({
       guestName,
       phone,
       partySize: Number(partySize),
@@ -31,6 +34,7 @@ export function TableRequestForm() {
       serviceTime,
       note,
     });
+    setSubmitting(false);
     if (result) {
       setSent(false);
       setError(result);
@@ -207,7 +211,7 @@ export function TableRequestForm() {
               <button
                 type="submit"
                 className="inline-flex items-center justify-center rounded-xl bg-gold px-8 py-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-all hover:bg-gold-bright disabled:opacity-50"
-                disabled={!ready}
+                disabled={!ready || submitting}
               >
                 {t.booking.submitBtn}
               </button>

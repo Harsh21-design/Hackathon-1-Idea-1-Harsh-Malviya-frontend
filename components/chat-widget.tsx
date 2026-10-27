@@ -22,23 +22,26 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageIdRef = useRef(0);
 
   // Initialize or update welcome messages when language changes
   useEffect(() => {
-    setMessages([
-      {
-        id: "w-1",
-        sender: "bot",
-        text: t.concierge.welcomeMsg,
-        time: "Just now",
-      },
-      {
-        id: "w-2",
-        sender: "bot",
-        text: t.concierge.welcomePrompt,
-        time: "Just now",
-      },
-    ]);
+    queueMicrotask(() => {
+      setMessages([
+        {
+          id: "w-1",
+          sender: "bot",
+          text: t.concierge.welcomeMsg,
+          time: "Just now",
+        },
+        {
+          id: "w-2",
+          sender: "bot",
+          text: t.concierge.welcomePrompt,
+          time: "Just now",
+        },
+      ]);
+    });
   }, [t]);
 
   const quickQuestions = [
@@ -63,8 +66,9 @@ export function ChatWidget() {
     const text = (textToSend || input).trim();
     if (!text) return;
 
+    messageIdRef.current += 1;
     const userMsg: Message = {
-      id: "u-" + Date.now(),
+      id: `u-${messageIdRef.current}`,
       sender: "user",
       text,
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
