@@ -8,11 +8,6 @@ export function VisitUs() {
 
   const contacts = [
     {
-      label: t.visit.telLabel,
-      value: "+34 685 721 593",
-      href: "tel:+34685721593",
-    },
-    {
       label: t.visit.telegramLabel,
       value: "@IturrietaBookingBot",
       href: "https://t.me/IturrietaBookingBot",

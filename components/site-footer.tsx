@@ -36,11 +36,6 @@ export function SiteFooter() {
           </p>
           <p className="text-stone-600">Arraga auzoa, 2 · 01169 Aramaio, Álava</p>
           <p>
-            <a href="tel:+34685721593" className="hover:text-gold font-medium transition-colors">
-              +34 685 721 593
-            </a>
-          </p>
-          <p>
             <a href="mailto:info@iturrieta.eus" className="hover:text-gold font-medium transition-colors">
               info@iturrieta.eus
             </a>

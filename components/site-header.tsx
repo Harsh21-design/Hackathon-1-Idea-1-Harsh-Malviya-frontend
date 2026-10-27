@@ -87,15 +87,19 @@ export function SiteHeader() {
             ))}
           </div>
 
-          {/* Telegram booking CTA */}
+          {/* Direct Book with Telegram CTA */}
           <a
             href="https://t.me/IturrietaBookingBot"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-bold text-stone-700 shadow-xs transition-all hover:border-gold hover:text-gold sm:inline-flex"
+            className="hidden items-center gap-2 rounded-full bg-[#0088cc]/10 hover:bg-[#0088cc] border border-[#0088cc]/30 hover:border-[#0088cc] px-3.5 py-1.5 text-xs font-semibold text-[#0088cc] hover:text-white shadow-xs transition-all duration-200 sm:inline-flex group"
+            title="Book instantly on Telegram @IturrietaBookingBot"
           >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            <span>{t.nav.telegramBooking}</span>
+            {/* Telegram paper plane icon */}
+            <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.945z"/>
+            </svg>
+            <span>Book with Telegram</span>
           </a>
 
           {/* Login button */}
@@ -158,9 +162,9 @@ export function SiteHeader() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
-              className="text-gold"
+              className="text-[#0088cc]"
             >
-              Telegram: @IturrietaBookingBot
+              Book with Telegram (@IturrietaBookingBot)
             </a>
           </nav>
         </div>

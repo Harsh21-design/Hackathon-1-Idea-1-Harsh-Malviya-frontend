@@ -105,17 +105,6 @@ export function HouseLanding() {
                 </div>
               </div>
             </div>
-
-            {/* Terroir callout */}
-            <div className="rounded-2xl border border-amber-200/60 bg-[#faefe4] p-5 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gold">{t.house.terroirLabel}</p>
-                <p className="text-sm font-semibold text-stone-900">{t.house.terroirTitle}</p>
-              </div>
-              <span className="text-xs rounded-full bg-white px-3 py-1 font-semibold text-gold shadow-xs">
-                {t.house.terroirBadge}
-              </span>
-            </div>
           </div>
 
         </div>

@@ -87,7 +87,8 @@ export function ChatWidget() {
           content: m.text,
         }));
 
-      const res = await fetch("http://127.0.0.1:8000/api/chat", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      const res = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -105,10 +106,10 @@ export function ChatWidget() {
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           action: data.booking_created
             ? {
-                type: "scroll",
-                target: "#request",
-                label: "View Reservation Details",
-              }
+              type: "scroll",
+              target: "#request",
+              label: "View Reservation Details",
+            }
             : undefined,
         };
         setMessages((prev) => [...prev, botMsg]);
@@ -178,24 +179,32 @@ export function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Floating Launcher Button */}
+      {/* Floating Launcher Button - Ultra Modern Sleek Design */}
       {!isOpen && (
         <button
           id="chat-reservas-toggle"
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-3 rounded-full bg-white border border-stone-200/90 px-5 py-3.5 text-stone-900 shadow-xl transition-all duration-300 hover:border-gold hover:shadow-2xl hover:-translate-y-1 active:scale-95"
-          aria-label={t.concierge.buttonLabel}
+          className="group relative flex items-center gap-3.5 rounded-full bg-stone-900/95 backdrop-blur-md border border-stone-700/60 pl-4 pr-3.5 py-2.5 text-white shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:bg-stone-900 hover:border-stone-500 hover:shadow-amber-500/10 active:scale-95"
+          aria-label="Chat with Reserve AI"
         >
-          <span className="relative flex h-3 w-3">
+          {/* Pulse Green Dot */}
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-xs" />
           </span>
 
-          <span className="font-serif text-base font-bold tracking-wide text-stone-900">
-            {t.concierge.buttonLabel}
-          </span>
+          {/* Text Info */}
+          <div className="flex flex-col text-left">
+            <span className="text-[13px] font-semibold tracking-tight text-white flex items-center gap-1.5">
+              Chat with Reserve AI
+            </span>
+            <span className="text-[10px] text-stone-400 font-normal">
+              Book tables & instant answers
+            </span>
+          </div>
 
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#faefe4] text-gold group-hover:bg-gold group-hover:text-white transition-colors">
+          {/* Icon Badge */}
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white group-hover:bg-amber-600 transition-colors">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
@@ -205,28 +214,32 @@ export function ChatWidget() {
 
       {/* Interactive Chat Window */}
       {isOpen && (
-        <div className="flex h-[530px] w-[92vw] max-w-[390px] flex-col overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-2xl transition-all">
-          
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-stone-100 bg-[#fbf9f5] px-5 py-4">
+        <div className="flex h-[560px] w-[92vw] max-w-[400px] flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-2xl transition-all">
+
+          {/* Header - Sleek Modern Dark Theme */}
+          <div className="flex items-center justify-between bg-stone-900 px-5 py-3.5 text-white">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gold/15 text-gold font-serif font-bold text-sm">
-                RI
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold text-sm shadow-inner">
+                ✨
               </div>
               <div>
-                <p className="font-serif text-lg font-bold text-stone-900 leading-tight">
-                  {t.concierge.title}
-                </p>
-                <div className="flex items-center gap-1.5 text-[11px] text-stone-500">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>{t.concierge.status}</span>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-base text-white leading-tight">
+                    Reserve AI
+                  </p>
+                  <span className="rounded-full bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                    Online
+                  </span>
                 </div>
+                <p className="text-[11px] text-stone-400">
+                  Sidrería Iturrieta Concierge
+                </p>
               </div>
             </div>
 
             <button
               onClick={() => setIsOpen(false)}
-              className="rounded-xl p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-800 transition-colors"
+              className="rounded-xl p-1.5 text-stone-400 hover:bg-stone-800 hover:text-white transition-colors"
               aria-label="Close chat"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,32 +248,31 @@ export function ChatWidget() {
             </button>
           </div>
 
-          {/* Telegram prompt */}
-          <div className="flex items-center justify-between bg-stone-50 px-4 py-2.5 text-xs border-b border-stone-100">
-            <span className="text-stone-600 font-medium">{t.concierge.telegramBanner}</span>
+          {/* Telegram prompt banner */}
+          <div className="flex items-center justify-between bg-amber-50/70 border-b border-amber-100/70 px-4 py-2 text-[11px]">
+            <span className="text-amber-950 font-medium">⚡ Telegram instant booking:</span>
             <a
               href="https://t.me/IturrietaBookingBot"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-gold hover:underline flex items-center gap-1"
+              className="font-bold text-amber-800 hover:text-amber-900 hover:underline flex items-center gap-0.5"
             >
               @IturrietaBookingBot →
             </a>
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-gradient-to-b from-stone-50/40 to-white text-xs">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-stone-50/50 text-[13px]">
             {messages.map((m) => (
               <div
                 key={m.id}
                 className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 shadow-2xs leading-relaxed ${
-                    m.sender === "user"
-                      ? "bg-forest-900 text-white rounded-br-xs"
-                      : "bg-white border border-stone-200/80 text-stone-800 rounded-bl-xs"
-                  }`}
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 shadow-xs leading-relaxed ${m.sender === "user"
+                      ? "bg-stone-900 text-white font-normal rounded-br-xs"
+                      : "bg-white border border-stone-200/90 text-stone-900 rounded-bl-xs"
+                    }`}
                 >
                   <p className="whitespace-pre-line">{m.text}</p>
                 </div>
@@ -268,7 +280,7 @@ export function ChatWidget() {
                 {m.action && (
                   <button
                     onClick={() => executeAction(m.action!)}
-                    className="mt-1.5 inline-flex items-center gap-1 rounded-lg bg-gold/10 border border-gold/30 px-3 py-1 text-[11px] font-bold text-gold hover:bg-gold hover:text-white transition-all shadow-2xs"
+                    className="mt-1.5 inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition shadow-xs"
                   >
                     <span>{m.action.label}</span>
                     <span>→</span>
@@ -280,22 +292,22 @@ export function ChatWidget() {
             ))}
 
             {isTyping && (
-              <div className="flex items-center gap-1.5 bg-white border border-stone-200/80 w-fit px-3 py-2 rounded-2xl rounded-bl-xs shadow-2xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" />
-                <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce [animation-delay:0.2s]" />
-                <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce [animation-delay:0.4s]" />
+              <div className="flex items-center gap-1.5 bg-white border border-stone-200 px-3.5 py-2.5 w-fit rounded-2xl rounded-bl-xs shadow-xs">
+                <span className="h-2 w-2 rounded-full bg-amber-600 animate-bounce" />
+                <span className="h-2 w-2 rounded-full bg-amber-600 animate-bounce [animation-delay:0.2s]" />
+                <span className="h-2 w-2 rounded-full bg-amber-600 animate-bounce [animation-delay:0.4s]" />
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Quick chip buttons */}
-          <div className="border-t border-stone-100 bg-[#fbf9f5] px-3 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <div className="border-t border-stone-100 bg-white px-3 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {quickQuestions.map((q) => (
               <button
                 key={q}
                 onClick={() => handleSend(q)}
-                className="shrink-0 rounded-full border border-stone-200 bg-white px-2.5 py-1 text-[10px] font-semibold text-stone-600 hover:border-gold hover:text-gold transition-colors"
+                className="shrink-0 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-[11px] font-medium text-stone-700 hover:border-amber-600 hover:text-amber-700 hover:bg-amber-50/50 transition-all"
               >
                 {q}
               </button>
@@ -315,12 +327,13 @@ export function ChatWidget() {
               placeholder={t.concierge.inputPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2 text-xs text-stone-800 placeholder-stone-400 outline-none focus:border-gold focus:bg-white transition"
+              className="flex-1 rounded-xl border border-stone-200 bg-stone-50/80 px-3.5 py-2.5 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 transition"
             />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold text-white disabled:opacity-40 transition hover:bg-gold-bright"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-600 text-white disabled:opacity-40 transition hover:bg-amber-700 active:scale-95 shadow-xs"
+              aria-label="Send message"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
